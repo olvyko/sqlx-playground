@@ -1,0 +1,16 @@
+[package]
+name = "sqlx-playground"
+version = "0.1.0"
+authors = ["olvyko <olvyko@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+tokio = { version = "0.2.21", features = ["full"] }
+dotenv = "0.15.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dependencies.sqlx]
+version = "0.3.5"
+features = [ "macros", "runtime-tokio", "postgres", "json", "chrono", "uuid" ]
+default-features = false
