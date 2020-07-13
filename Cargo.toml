@@ -5,6 +5,8 @@ authors = ["olvyko <olvyko@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+chrono = { version = "0.4.13", features = ["serde"] }
+uuid = { version = "0.8.1", features = ["serde", "v4"] }
 tokio = { version = "0.2.21", features = ["full"] }
 dotenv = "0.15.0"
 serde = { version = "1.0", features = ["derive"] }

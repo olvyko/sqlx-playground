@@ -1,0 +1,18 @@
+[config]
+skip_core_tasks = true
+default_to_workspace = false
+
+[tasks.run]
+description = "Starts the server"
+command = "cargo"
+args = ["run"]
+
+[tasks.dev]
+description = "Starts the server with database"
+command = "cargo"
+args = ["run"]
+dependencies = ["setup-database"]
+
+[tasks.setup-database]
+description = "Starts database with docker-compose"
+script = ["docker-compose up -d", "bash -c 'sleep 3'"]
