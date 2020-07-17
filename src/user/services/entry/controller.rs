@@ -14,13 +14,14 @@ impl EntryController {
             return Err("Username already occupied")?;
         };
         let customer = conn.create_customer(username).await?;
-        let email = if let Some(email) = email {
-            if conn.get_customer_by_email(email).await?.is_some() {
-                return Err("Email already occupied")?;
-            };
-            Some(conn.create_email(email, customer.id).await?)
-        } else {
-            None
+        let email = match email {
+            Some(email) => {
+                if conn.get_customer_by_email(email).await?.is_some() {
+                    return Err("Email already occupied")?;
+                };
+                Some(conn.create_email(email, customer.id).await?)
+            }
+            None => None,
         };
         Ok((customer, email).into())
     }
