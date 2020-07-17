@@ -1,7 +1,7 @@
-mod components;
 mod entities;
+mod models;
 mod scalars;
 
-pub use components::*;
 pub use entities::*;
+pub use models::*;
 pub use scalars::*;
