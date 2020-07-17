@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2" last-position="0,0" last-zoom="1" max-obj-count="13"
+	 default-schema="public" default-owner="postgres">
+<role name="admin">
+</role>
+
+<database name="cryga" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="server" layer="0" fill-color="#e1e1e1">
+	<role name="admin"/>
+</schema>
+
+<table name="user" layer="0" collapse-mode="1" max-obj-count="9">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="560" y="380"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="referrer_id">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="referral_token" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="user_type" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="preferences" not-null="true">
+		<type name="jsonb" length="0"/>
+	</column>
+	<column name="tfa_secret" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="user_pkey" type="pk-constr" table="server.&quot;user&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="user_referral_token_key" type="uq-constr" table="server.&quot;user&quot;">
+		<columns names="referral_token" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="user_username_key" type="uq-constr" table="server.&quot;user&quot;">
+		<columns names="username" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="user_tfa_secret_key" type="uq-constr" table="server.&quot;user&quot;">
+		<columns names="tfa_secret" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="email" layer="0" collapse-mode="1" max-obj-count="4">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="540" y="40"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="email_pkey" type="pk-constr" table="server.email">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="email_email_key" type="uq-constr" table="server.email">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tfa_profile" layer="0" collapse-mode="1" max-obj-count="4">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="60" y="300"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="data" not-null="true">
+		<type name="jsonb" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="tfa_profile_pkey" type="pk-constr" table="server.tfa_profile">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="password" layer="0" collapse-mode="1" max-obj-count="7">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="40" y="500"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="hash" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="reset_token">
+		<type name="text" length="0"/>
+	</column>
+	<column name="reset_sent_at">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="password_pkey" type="pk-constr" table="server.password">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="user_state" layer="0" collapse-mode="1" max-obj-count="10">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="40" y="20"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sender_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="receiver_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="reason">
+		<type name="text" length="0"/>
+	</column>
+	<column name="end_time">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<column name="canceled_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<column name="canceler_id">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="user_state_pkey" type="pk-constr" table="server.user_state">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="auth_token" layer="0" collapse-mode="1" max-obj-count="6">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="220" y="720"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="issuer" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="issued" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<column name="device" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="auth_token_pkey" type="pk-constr" table="server.auth_token">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="fairness" layer="0" collapse-mode="1" max-obj-count="6">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="540" y="740"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="data" not-null="true">
+		<type name="jsonb" length="0"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="fairness_pkey" type="pk-constr" table="server.fairness">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="internal_tx" layer="0" collapse-mode="1" max-obj-count="6">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="1060" y="460"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="deposit" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="withdraw" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="currency_type" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="internal_tx_pkey" type="pk-constr" table="server.internal_tx">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="game_wheel_round" layer="0" collapse-mode="1" max-obj-count="7">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="1440" y="200"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="server_seed" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="server_hash" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="end_time">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<column name="currency_type" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0" precision="3"/>
+	</column>
+	<constraint name="game_wheel_round_pkey" type="pk-constr" table="server.game_wheel_round">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="internal_tx_game_wheel_round" layer="0" collapse-mode="1" max-obj-count="6">
+	<schema name="server"/>
+	<role name="admin"/>
+	<position x="1340" y="760"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="internal_tx_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="game_wheel_round_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<constraint name="internal_tx_game_wheel_round_pkey" type="pk-constr" table="server.internal_tx_game_wheel_round">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="internal_tx_id_key" type="uq-constr" table="server.internal_tx_game_wheel_round">
+		<columns names="internal_tx_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="game_wheel_round_id_key" type="uq-constr" table="server.internal_tx_game_wheel_round">
+		<columns names="game_wheel_round_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="user_referrer_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.&quot;user&quot;">
+	<columns names="referrer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="email_user_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.email">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tfa_profile_user_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.tfa_profile">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="password_user_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.password">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="user_state_sender_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.user_state">
+	<columns names="sender_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="user_state_receiver_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.user_state">
+	<columns names="receiver_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="user_state_canceler_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.user_state">
+	<columns names="canceler_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="auth_token_issuer_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.auth_token">
+	<columns names="issuer" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fairness_user_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.&quot;user&quot;" table="server.fairness">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="internal_tx_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.internal_tx" table="server.internal_tx_game_wheel_round">
+	<columns names="internal_tx_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="game_wheel_round_id_fkey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="server.game_wheel_round" table="server.internal_tx_game_wheel_round">
+	<columns names="game_wheel_round_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_email_user" type="relfk" layer="0"
+	 src-table="server.email"
+	 dst-table="server.&quot;user&quot;" reference-fk="email_user_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="3.70522" y="-14.4266"/>
+	</label>
+</relationship>
+
+<relationship name="rel_user_user" type="relfk" layer="0"
+	 src-table="server.&quot;user&quot;"
+	 dst-table="server.&quot;user&quot;" reference-fk="user_referrer_id_fkey"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="849.928" y="445.233"/>
+	<position x="849.928" y="357"/>
+	<position x="737.952" y="357"/>
+	</line>
+</relationship>
+
+<relationship name="rel_tfa_profile_user" type="relfk" layer="0"
+	 src-table="server.tfa_profile"
+	 dst-table="server.&quot;user&quot;" reference-fk="tfa_profile_user_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-5.12578" y="-33.6303"/>
+	</label>
+</relationship>
+
+<relationship name="rel_password_user" type="relfk" layer="0"
+	 src-table="server.password"
+	 dst-table="server.&quot;user&quot;" reference-fk="password_user_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-6.23953" y="-25.2485"/>
+	</label>
+</relationship>
+
+<relationship name="rel_user_state_user_sender" type="relfk" layer="0"
+	 src-table="server.user_state"
+	 dst-table="server.&quot;user&quot;" reference-fk="user_state_sender_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="38.2605" y="-59.3016"/>
+	</label>
+</relationship>
+
+<relationship name="rel_user_state_user_receiver" type="relfk" layer="0"
+	 src-table="server.user_state"
+	 dst-table="server.&quot;user&quot;" reference-fk="user_state_receiver_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="61.2605" y="-32.0869"/>
+	</label>
+</relationship>
+
+<relationship name="rel_user_state_user_canceler" type="relfk" layer="0"
+	 src-table="server.user_state"
+	 dst-table="server.&quot;user&quot;" reference-fk="user_state_canceler_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="63.2605" y="-1.84978"/>
+	</label>
+</relationship>
+
+<relationship name="rel_auth_token_user" type="relfk" layer="0"
+	 src-table="server.auth_token"
+	 dst-table="server.&quot;user&quot;" reference-fk="auth_token_issuer_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-1.0207" y="-28.2516"/>
+	</label>
+</relationship>
+
+<relationship name="rel_fairness_user" type="relfk" layer="0"
+	 src-table="server.fairness"
+	 dst-table="server.&quot;user&quot;" reference-fk="fairness_user_id_fkey"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_internal_tx_game_wheel_round_internal_tx" type="relfk" layer="0"
+	 src-table="server.internal_tx_game_wheel_round"
+	 dst-table="server.internal_tx" reference-fk="internal_tx_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="43.1619" y="-14.2516"/>
+	</label>
+</relationship>
+
+<relationship name="rel_internal_tx_game_wheel_round_game_wheel_round" type="relfk" layer="0"
+	 src-table="server.internal_tx_game_wheel_round"
+	 dst-table="server.game_wheel_round" reference-fk="game_wheel_round_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="75.0648" y="-69.6516"/>
+	</label>
+</relationship>
+
+</dbmodel>

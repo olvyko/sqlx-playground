@@ -14,6 +14,7 @@ serde_json = "1.0"
 async-trait = "0.1.27"
 
 [dependencies.sqlx]
-version = "0.3.5"
-features = [ "macros", "runtime-tokio", "postgres", "json", "chrono", "uuid" ]
+git = "https://github.com/launchbadge/sqlx"
+rev = "92cddc76c886285f95f18bfcb41e12626b4d236f"
+features = [ "macros", "runtime-tokio", "postgres", "migrate", "json", "chrono", "uuid" ]
 default-features = false
