@@ -1,6 +1,5 @@
-use crate::shared::*;
 use async_trait::async_trait;
-use sqlx::PgConnection;
+use shared::*;
 
 #[async_trait]
 pub trait EntryUsecase {
@@ -28,9 +27,9 @@ impl EntryUsecase for PgConnection {
         };
         sqlx::query!(
             r#"
-                INSERT INTO customer(id, username, preferences, created_at)
-                VALUES($1, $2, $3, $4)
-            "#,
+INSERT INTO customer(id, username, preferences, created_at)
+VALUES($1, $2, $3, $4)
+"#,
             entity.id,
             entity.username,
             serde_json::to_value(&entity.preferences)?,
@@ -45,11 +44,11 @@ impl EntryUsecase for PgConnection {
         let user = sqlx::query_as_unchecked!(
             CustomerEntity,
             r#"
-                SELECT
-                    id, username, preferences, created_at
-                FROM customer
-                WHERE username=$1
-            "#,
+SELECT
+    id, username, preferences, created_at
+FROM customer
+WHERE username=$1
+"#,
             username
         )
         .fetch_optional(self)
@@ -61,12 +60,12 @@ impl EntryUsecase for PgConnection {
         let user = sqlx::query_as_unchecked!(
             CustomerEntity,
             r#"
-                SELECT
-                    c.id, c.username, c.preferences, c.created_at
-                FROM customer AS c
-                    LEFT JOIN email AS e ON e.id=(SELECT id FROM email WHERE customer_id=c.id ORDER BY created_at DESC LIMIT 1)
-                WHERE e.email=$1
-            "#,
+SELECT
+    c.id, c.username, c.preferences, c.created_at
+FROM customer AS c
+    LEFT JOIN email AS e ON e.id=(SELECT id FROM email WHERE customer_id=c.id ORDER BY created_at DESC LIMIT 1)
+WHERE e.email=$1
+"#,
             email
         )
         .fetch_optional(self)
@@ -80,13 +79,13 @@ impl EntryUsecase for PgConnection {
     ) -> Result<Option<(CustomerEntity, EmailEntity)>> {
         let row = sqlx::query!(
             r#"
-                SELECT
-                    c.id AS customer_id, c.username, c.preferences, c.created_at AS customer_created_at,
-                    e.id AS email_id, e.customer_id AS email_customer_id, e.email, e.created_at AS email_created_at
-                FROM customer AS c
-                    LEFT JOIN email AS e ON e.id=(SELECT id FROM email WHERE customer_id=c.id ORDER BY created_at DESC LIMIT 1)
-                WHERE c.username=$1
-            "#,
+SELECT
+    c.id AS customer_id, c.username, c.preferences, c.created_at AS customer_created_at,
+    e.id AS email_id, e.customer_id AS email_customer_id, e.email, e.created_at AS email_created_at
+FROM customer AS c
+    LEFT JOIN email AS e ON e.id=(SELECT id FROM email WHERE customer_id=c.id ORDER BY created_at DESC LIMIT 1)
+WHERE c.username=$1
+"#,
             username
         )
         .fetch_optional(self)
@@ -119,9 +118,9 @@ impl EntryUsecase for PgConnection {
         };
         sqlx::query!(
             r#"
-                INSERT INTO email(id, customer_id, email, created_at)
-                VALUES($1, $2, $3, $4)
-            "#,
+INSERT INTO email(id, customer_id, email, created_at)
+VALUES($1, $2, $3, $4)
+"#,
             entity.id,
             entity.customer_id,
             entity.email,

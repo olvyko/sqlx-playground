@@ -1,0 +1,171 @@
+{
+  "db": "PostgreSQL",
+  "18da19df67f3c27b94493610457bbb691a2af072be343e085b2607fc5dc425bc": {
+    "query": "\nINSERT INTO customer(id, username, preferences, created_at)\nVALUES($1, $2, $3, $4)\n",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Text",
+          "Jsonb",
+          "Timestamp"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "228dc775f932ed105b67497ae78540661521061fb32d51a8e2b330938b2099f8": {
+    "query": "\nSELECT\n    c.id AS customer_id, c.username, c.preferences, c.created_at AS customer_created_at,\n    e.id AS email_id, e.customer_id AS email_customer_id, e.email, e.created_at AS email_created_at\nFROM customer AS c\n    LEFT JOIN email AS e ON e.id=(SELECT id FROM email WHERE customer_id=c.id ORDER BY created_at DESC LIMIT 1)\nWHERE c.username=$1\n",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "customer_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "username",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 2,
+          "name": "preferences",
+          "type_info": "Jsonb"
+        },
+        {
+          "ordinal": 3,
+          "name": "customer_created_at",
+          "type_info": "Timestamp"
+        },
+        {
+          "ordinal": 4,
+          "name": "email_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 5,
+          "name": "email_customer_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 6,
+          "name": "email",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 7,
+          "name": "email_created_at",
+          "type_info": "Timestamp"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "289163a4f8e915ea1f1097a775df76d927bc6e6e2671b9fe3cc0fbfdc414e7c9": {
+    "query": "\nSELECT\n    c.id, c.username, c.preferences, c.created_at\nFROM customer AS c\n    LEFT JOIN email AS e ON e.id=(SELECT id FROM email WHERE customer_id=c.id ORDER BY created_at DESC LIMIT 1)\nWHERE e.email=$1\n",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "username",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 2,
+          "name": "preferences",
+          "type_info": "Jsonb"
+        },
+        {
+          "ordinal": 3,
+          "name": "created_at",
+          "type_info": "Timestamp"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "46c23869fab6012489a051aca84746a3bd295cdf79073b992312bed1bc2f0376": {
+    "query": "\nSELECT\n    id, username, preferences, created_at\nFROM customer\nWHERE username=$1\n",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "username",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 2,
+          "name": "preferences",
+          "type_info": "Jsonb"
+        },
+        {
+          "ordinal": 3,
+          "name": "created_at",
+          "type_info": "Timestamp"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "82a3105211f43e0715a5cfd938498d979ff4d5b57af2c24b5daf291dc7ff5eb1": {
+    "query": "\nINSERT INTO email(id, customer_id, email, created_at)\nVALUES($1, $2, $3, $4)\n",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Uuid",
+          "Text",
+          "Timestamp"
+        ]
+      },
+      "nullable": []
+    }
+  }
+}

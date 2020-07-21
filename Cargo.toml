@@ -4,17 +4,24 @@ version = "0.1.0"
 authors = ["olvyko <olvyko@gmail.com>"]
 edition = "2018"
 
+[workspace]
+members = [
+    "modules/shared",
+    "modules/user",
+]
+
 [dependencies]
-chrono = { version = "0.4.13", features = ["serde"] }
-uuid = { version = "0.8.1", features = ["serde", "v4"] }
+shared = { path = "modules/shared" }
+user = { path = "modules/user" }
 tokio = { version = "0.2.21", features = ["full"] }
 dotenv = "0.15.0"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-async-trait = "0.1.27"
 
-[dependencies.sqlx]
+[build-dependencies]
+tokio = { version = "0.2.21", features = ["full"] }
+dotenv = "0.15.0"
+
+[build-dependencies.sqlx]
 git = "https://github.com/launchbadge/sqlx"
-rev = "92cddc76c886285f95f18bfcb41e12626b4d236f"
+rev = "41261862d3537bd386149b4bf40d3a9517f73205"
 features = [ "macros", "runtime-tokio", "postgres", "migrate", "json", "chrono", "uuid" ]
 default-features = false

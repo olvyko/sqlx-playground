@@ -1,5 +1,5 @@
 use super::EntryUsecase;
-use crate::shared::*;
+use shared::*;
 use sqlx::PgConnection;
 
 pub struct EntryController;
