@@ -8,20 +8,20 @@ async fn main() -> Result<()> {
     let pool = DbPoolBuilder::from_url(&url).build().await?;
 
     let user_module = UserModule::new();
-    let entry_ctr = user_module.entry();
+    let entry = user_module.entry();
 
     {
         let mut tx = pool.begin().await?;
-        entry_ctr.register(&mut tx, "admin", Some("admin@gmail.com")).await?;
+        entry.register(&mut tx, "admin", Some("admin@gmail.com")).await?;
     }
     {
         let mut tx = pool.begin().await?;
-        entry_ctr.register(&mut tx, "admin", Some("admin@gmail.com")).await?;
+        entry.register(&mut tx, "admin", Some("admin@gmail.com")).await?;
         tx.commit().await?;
     }
     {
         let mut tx = pool.begin().await?;
-        let error = entry_ctr.register(&mut tx, "admin", Some("admin@gmail.com")).await;
+        let error = entry.register(&mut tx, "admin", Some("admin@gmail.com")).await;
         println!("{:?}", error);
     }
     Ok(())

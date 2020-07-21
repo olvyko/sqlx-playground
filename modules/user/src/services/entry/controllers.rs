@@ -1,25 +1,16 @@
+use super::traits::*;
 use async_trait::async_trait;
 use shared::*;
 
-#[async_trait]
-pub trait EntryDatabase {
-    async fn create_customer(&mut self, username: &str) -> Result<CustomerEntity>;
-    async fn get_customer_by_username(&mut self, username: &str) -> Result<Option<CustomerEntity>>;
-    async fn get_customer_by_email(&mut self, email: &str) -> Result<Option<CustomerEntity>>;
-    async fn get_customer_with_email_by_username(
-        &mut self,
-        username: &str,
-    ) -> Result<Option<(CustomerEntity, EmailEntity)>>;
-    async fn create_email(&mut self, email: &str, user_id: Uuid) -> Result<EmailEntity>;
-}
+pub struct EntryController;
 
 #[async_trait]
-impl EntryDatabase for PgConnection {
-    async fn create_customer(&mut self, username: &str) -> Result<CustomerEntity> {
-        let entity = CustomerEntity {
+impl EntryDb for EntryController {
+    async fn create_customer(&self, conn: &mut PgConnection, username: &str) -> Result<CustomerComponent> {
+        let component = CustomerComponent {
             id: new_uuid(),
             username: username.to_owned(),
-            preferences: Json(PreferencesEntity {
+            preferences: Json(PreferencesComponent {
                 online: true,
                 sounds: true,
             }),
@@ -30,19 +21,19 @@ impl EntryDatabase for PgConnection {
 INSERT INTO customer(id, username, preferences, created_at)
 VALUES($1, $2, $3, $4)
 "#,
-            entity.id,
-            entity.username,
-            serde_json::to_value(&entity.preferences)?,
-            entity.created_at
+            component.id,
+            component.username,
+            serde_json::to_value(&component.preferences)?,
+            component.created_at
         )
-        .execute(self)
+        .execute(conn)
         .await?;
-        Ok(entity)
+        Ok(component)
     }
 
-    async fn get_customer_by_username(&mut self, username: &str) -> Result<Option<CustomerEntity>> {
-        let user = sqlx::query_as_unchecked!(
-            CustomerEntity,
+    async fn get_customer_by_username(&self, conn: &mut PgConnection, username: &str) -> Result<Option<CustomerComponent>> {
+        let component = sqlx::query_as_unchecked!(
+            CustomerComponent,
             r#"
 SELECT
     id, username, preferences, created_at
@@ -51,14 +42,14 @@ WHERE username=$1
 "#,
             username
         )
-        .fetch_optional(self)
+        .fetch_optional(conn)
         .await?;
-        Ok(user)
+        Ok(component)
     }
 
-    async fn get_customer_by_email(&mut self, email: &str) -> Result<Option<CustomerEntity>> {
-        let user = sqlx::query_as_unchecked!(
-            CustomerEntity,
+    async fn get_customer_by_email(&self, conn: &mut PgConnection, email: &str) -> Result<Option<CustomerComponent>> {
+        let component = sqlx::query_as_unchecked!(
+            CustomerComponent,
             r#"
 SELECT
     c.id, c.username, c.preferences, c.created_at
@@ -68,15 +59,16 @@ WHERE e.email=$1
 "#,
             email
         )
-        .fetch_optional(self)
+        .fetch_optional(conn)
         .await?;
-        Ok(user)
+        Ok(component)
     }
 
     async fn get_customer_with_email_by_username(
-        &mut self,
+        &self,
+        conn: &mut PgConnection,
         username: &str,
-    ) -> Result<Option<(CustomerEntity, EmailEntity)>> {
+    ) -> Result<Option<(CustomerComponent, EmailComponent)>> {
         let row = sqlx::query!(
             r#"
 SELECT
@@ -88,17 +80,16 @@ WHERE c.username=$1
 "#,
             username
         )
-        .fetch_optional(self)
+        .fetch_optional(conn)
         .await?;
-
         row.map(|row| {
-            let user = CustomerEntity {
+            let user = CustomerComponent {
                 id: row.customer_id,
                 username: row.username,
                 preferences: serde_json::from_value(row.preferences)?,
                 created_at: row.customer_created_at,
             };
-            let email = EmailEntity {
+            let email = EmailComponent {
                 id: row.email_id,
                 customer_id: row.email_customer_id,
                 email: row.email,
@@ -109,8 +100,8 @@ WHERE c.username=$1
         .transpose()
     }
 
-    async fn create_email(&mut self, email: &str, customer_id: Uuid) -> Result<EmailEntity> {
-        let entity = EmailEntity {
+    async fn create_email(&self, conn: &mut PgConnection, email: &str, customer_id: Uuid) -> Result<EmailComponent> {
+        let component = EmailComponent {
             id: new_uuid(),
             customer_id,
             email: email.to_owned(),
@@ -121,13 +112,21 @@ WHERE c.username=$1
 INSERT INTO email(id, customer_id, email, created_at)
 VALUES($1, $2, $3, $4)
 "#,
-            entity.id,
-            entity.customer_id,
-            entity.email,
-            entity.created_at
+            component.id,
+            component.customer_id,
+            component.email,
+            component.created_at
         )
-        .execute(self)
+        .execute(conn)
         .await?;
-        Ok(entity)
+        Ok(component)
+    }
+}
+
+#[allow(unused)]
+impl EntryMailer for EntryController {
+    fn send_email_verification_mail(&self, to: &str, email_verify_token: &str) -> Result<()> {
+        // Here send email logic
+        Ok(())
     }
 }

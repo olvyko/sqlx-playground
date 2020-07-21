@@ -1,5 +1,7 @@
-mod controller;
-mod database;
+mod controllers;
+mod traits;
+mod usecase;
 
-pub use controller::*;
-pub use database::*;
+pub use controllers::*;
+pub use traits::*;
+pub use usecase::*;
