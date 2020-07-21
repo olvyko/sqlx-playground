@@ -1,4 +1,4 @@
-use super::EntryUsecase;
+use super::EntryDatabase;
 use shared::*;
 use sqlx::PgConnection;
 

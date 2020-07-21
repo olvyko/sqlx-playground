@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use shared::*;
 
 #[async_trait]
-pub trait EntryUsecase {
+pub trait EntryDatabase {
     async fn create_customer(&mut self, username: &str) -> Result<CustomerEntity>;
     async fn get_customer_by_username(&mut self, username: &str) -> Result<Option<CustomerEntity>>;
     async fn get_customer_by_email(&mut self, email: &str) -> Result<Option<CustomerEntity>>;
@@ -14,7 +14,7 @@ pub trait EntryUsecase {
 }
 
 #[async_trait]
-impl EntryUsecase for PgConnection {
+impl EntryDatabase for PgConnection {
     async fn create_customer(&mut self, username: &str) -> Result<CustomerEntity> {
         let entity = CustomerEntity {
             id: new_uuid(),
