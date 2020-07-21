@@ -15,5 +15,5 @@ pub trait EntryDb {
 }
 
 pub trait EntryMailer {
-    fn send_email_verification_mail(&self, to: &str, email_verify_token: &str) -> Result<()>;
+    fn send_verification_mail(&self, to: &str, email_verify_token: &str) -> Result<()>;
 }

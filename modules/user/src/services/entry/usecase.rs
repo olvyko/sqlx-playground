@@ -22,7 +22,7 @@ impl EntryUsecase {
                     return Err("Email already occupied")?;
                 };
                 let email = self.ctr.create_email(conn, email, customer.id).await?;
-                self.ctr.send_email_verification_mail(&email.email, "token")?;
+                self.ctr.send_verification_mail(&email.email, "token")?;
                 Some(email)
             }
             None => None,
