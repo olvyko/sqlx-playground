@@ -14,7 +14,18 @@ members = [
 shared = { path = "modules/shared" }
 user = { path = "modules/user" }
 tokio = { version = "0.2.21", features = ["full"] }
+futures = "0.3.0"
 dotenv = "0.15.0"
+actix-web = { version = "2.0", features = ["rustls"] }
+actix-cors = "0.2"
+actix-rt = "1.0.0"
+actix = "0.9.0"
+pretty_env_logger = "0.3"
+colored = "1.9.2"
+log = "0.4.8"
+async-graphql = "1.16.10"
+async-graphql-actix-web = "1.16.10"
+actix-web-actors = "2.0.0"
 
 [build-dependencies]
 tokio = { version = "0.2.21", features = ["full"] }
@@ -23,5 +34,5 @@ dotenv = "0.15.0"
 [build-dependencies.sqlx]
 git = "https://github.com/launchbadge/sqlx"
 rev = "41261862d3537bd386149b4bf40d3a9517f73205"
-features = [ "macros", "runtime-tokio", "postgres", "migrate", "json", "chrono", "uuid" ]
+features = [ "macros", "runtime-actix", "postgres", "migrate", "json", "chrono", "uuid" ]
 default-features = false

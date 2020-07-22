@@ -1,28 +1,28 @@
-use shared::*;
-use user::*;
+mod services;
 
-#[tokio::main]
-async fn main() -> Result<()> {
-    dotenv::dotenv().ok();
-    let url = std::env::var("DATABASE_URL").map_err(|_| "DATABASE_URL is not set in .env file")?;
-    let pool = DbPoolBuilder::from_url(&url).build().await?;
+use colored::Colorize;
+use log::LevelFilter;
+use shared::Result;
+use std::future::Future;
 
-    let user_module = UserModule::new();
-    let entry = user_module.entry();
+#[actix_rt::main]
+async fn main() {
+    pretty_env_logger::formatted_builder()
+        .filter_level(LevelFilter::Info)
+        .filter(Some("actix_web"), LevelFilter::Error)
+        .init();
+    handle_errors(services::run).await;
+}
 
-    {
-        let mut tx = pool.begin().await?;
-        entry.register(&mut tx, "admin", Some("admin@gmail.com")).await?;
-    }
-    {
-        let mut tx = pool.begin().await?;
-        entry.register(&mut tx, "admin", Some("admin@gmail.com")).await?;
-        tx.commit().await?;
-    }
-    {
-        let mut tx = pool.begin().await?;
-        let error = entry.register(&mut tx, "admin", Some("admin@gmail.com")).await;
-        println!("{:?}", error);
-    }
-    Ok(())
+async fn handle_errors<F>(run: impl FnOnce() -> F)
+where
+    F: Future<Output = Result<()>>,
+{
+    if let Err(err) = run().await {
+        eprintln!("{}: {}", "error".red().bold(), err);
+        if let Some(source) = err.source() {
+            eprintln!("{}: {}", "caused by".bright_red().bold(), source);
+        }
+        std::process::exit(1);
+    };
 }

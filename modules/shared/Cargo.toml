@@ -16,5 +16,5 @@ async-trait = "0.1.27"
 [dependencies.sqlx]
 git = "https://github.com/launchbadge/sqlx"
 rev = "41261862d3537bd386149b4bf40d3a9517f73205"
-features = [ "offline", "macros", "runtime-tokio", "postgres", "migrate", "json", "chrono", "uuid" ]
+features = [ "offline", "macros", "runtime-actix", "postgres", "migrate", "json", "chrono", "uuid" ]
 default-features = false
