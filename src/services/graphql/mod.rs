@@ -1,36 +1,40 @@
-use async_graphql::{Context, Schema};
-use futures::{Stream, StreamExt};
-use std::time::Duration;
+mod user;
 
-pub type GraphqlSchema = Schema<QueryRoot, MutationRoot, SubscriptionRoot>;
+use self::user::*;
+
+use crate::services::context::JuniperContext;
+use juniper::{EmptySubscription, FieldResult, RootNode};
 
 pub struct QueryRoot;
 
-#[async_graphql::Object]
+/// Query root
+#[juniper::graphql_object(context = JuniperContext)]
 impl QueryRoot {
-    async fn register(&self, ctx: &Context<'_>) -> String {
-        "id".to_owned()
+    /// User queries
+    fn user() -> FieldResult<UserQueries> {
+        Ok(UserQueries)
     }
 }
 
 pub struct MutationRoot;
 
-#[async_graphql::Object]
+/// Mutation root
+#[juniper::graphql_object(context = JuniperContext)]
 impl MutationRoot {
-    async fn register(&self, ctx: &Context<'_>, username: String, email: Option<String>) -> String {
-        "id".to_owned()
+    /// User mutations
+    fn user() -> FieldResult<UserMutations> {
+        Ok(UserMutations)
     }
 }
 
-pub struct SubscriptionRoot;
+/// Root query node of a schema.
+/// This brings the mutation and query types together, and provides the predefined metadata fields.
+pub type GraphqlRoot = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<JuniperContext>>;
 
-#[async_graphql::Subscription]
-impl SubscriptionRoot {
-    async fn interval(&self, #[arg(default = 1)] n: i32) -> impl Stream<Item = i32> {
-        let mut value = 0;
-        tokio::time::interval(Duration::from_secs(1)).map(move |_| {
-            value += n;
-            value
-        })
+pub struct GraphqlRootBuilder;
+
+impl GraphqlRootBuilder {
+    pub fn build(self) -> GraphqlRoot {
+        RootNode::new(QueryRoot, MutationRoot, EmptySubscription::new())
     }
 }

@@ -1,15 +1,20 @@
+mod context;
 mod graphql;
 mod handlers;
 
 use actix_cors::Cors;
-use actix_web::{guard, http::header, middleware::Logger, web, App, HttpServer};
-use async_graphql::Schema;
+use actix_web::{http::header, middleware::Logger, web, App, HttpServer};
+use context::*;
 use graphql::*;
-use handlers::*;
 use shared::*;
+use std::sync::Arc;
 
 pub async fn run() -> Result<()> {
-    let schema = Schema::build(QueryRoot, MutationRoot, SubscriptionRoot).finish();
+    dotenv::dotenv().ok();
+    let url = std::env::var("DATABASE_URL").map_err(|_| "DATABASE_URL is not set in .env file")?;
+    let db_pool = DbPoolBuilder::from_url(&url).build().await?;
+    let modules = web::Data::new(ServerModules::new().await?);
+    let schema = Arc::new(GraphqlRootBuilder.build());
     let app = move || {
         App::new()
             .wrap(
@@ -23,15 +28,11 @@ pub async fn run() -> Result<()> {
             )
             .wrap(Logger::default())
             .data(schema.clone())
-            .service(web::resource("/").guard(guard::Post()).to(index))
-            .service(
-                web::resource("/")
-                    .guard(guard::Get())
-                    .guard(guard::Header("upgrade", "websocket"))
-                    .to(index_ws),
-            )
-            .service(web::resource("/").guard(guard::Get()).to(index_playground))
+            .data(db_pool.clone())
+            .app_data(modules.clone())
+            .service(handlers::graphql_handler)
+            .service(handlers::playground_handler)
     };
-    HttpServer::new(app).bind(format!("0.0.0.0:{}", 8080))?.run().await?;
+    HttpServer::new(app).bind(format!("0.0.0.0:{}", 3000))?.run().await?;
     Ok(())
 }

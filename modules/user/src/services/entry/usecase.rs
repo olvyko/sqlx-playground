@@ -29,4 +29,9 @@ impl EntryUsecase {
         };
         Ok((customer, email).into())
     }
+
+    pub async fn get_customer_by_username(&self, conn: &mut PgConnection, username: &str) -> Result<Option<Customer>> {
+        let customer = self.ctr.get_customer_by_username(conn, username).await?;
+        Ok(customer.map(|c| c.into()))
+    }
 }

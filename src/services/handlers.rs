@@ -1,19 +1,27 @@
-use super::graphql::*;
-use actix_web::{web, HttpRequest, HttpResponse};
-use actix_web_actors::ws;
-use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
-use async_graphql_actix_web::{GQLRequest, GQLResponse, WSSubscription};
+use super::{
+    context::{JuniperContext, ServerModules},
+    graphql::GraphqlRoot,
+};
+use actix_web::{get, post, web, Error, HttpResponse, Responder};
+use juniper::http::{playground::playground_source, GraphQLRequest};
+use shared::DbPool;
+use std::sync::Arc;
 
-pub async fn index(schema: web::Data<GraphqlSchema>, req: GQLRequest) -> GQLResponse {
-    req.into_inner().execute(&schema).await.into()
+#[get("/playground")]
+pub async fn playground_handler() -> impl Responder {
+    let html = playground_source("/graphql", None);
+    HttpResponse::Ok().content_type("text/html; charset=utf-8").body(html)
 }
 
-pub async fn index_playground() -> actix_web::Result<HttpResponse> {
-    Ok(HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
-        .body(playground_source(GraphQLPlaygroundConfig::new("/").subscription_endpoint("/"))))
-}
-
-pub async fn index_ws(schema: web::Data<GraphqlSchema>, req: HttpRequest, payload: web::Payload) -> actix_web::Result<HttpResponse> {
-    ws::start_with_protocols(WSSubscription::new(&schema), &["graphql-ws"], &req, payload)
+#[post("/graphql")]
+pub async fn graphql_handler(
+    graphql_root: web::Data<Arc<GraphqlRoot>>,
+    req: web::Json<GraphQLRequest>,
+    db_pool: web::Data<DbPool>,
+    modules: web::Data<ServerModules>,
+) -> Result<impl Responder, Error> {
+    let ctx = JuniperContext::init(db_pool.get_ref().clone(), modules.into_inner());
+    let res = req.execute(&graphql_root, &ctx).await;
+    let json = serde_json::to_string(&res)?;
+    Ok(HttpResponse::Ok().content_type("application/json").body(json))
 }
