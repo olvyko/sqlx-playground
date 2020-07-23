@@ -28,18 +28,6 @@ impl From<PreferencesComponent> for Preferences {
     }
 }
 
-impl From<CustomerComponent> for Customer {
-    fn from(customer: CustomerComponent) -> Customer {
-        Customer {
-            id: customer.id,
-            username: customer.username,
-            preferences: customer.preferences.0.into(),
-            created_at: customer.created_at.into(),
-            email: None,
-        }
-    }
-}
-
 impl From<(CustomerComponent, Option<EmailComponent>)> for Customer {
     fn from((customer, email): (CustomerComponent, Option<EmailComponent>)) -> Customer {
         Customer {
