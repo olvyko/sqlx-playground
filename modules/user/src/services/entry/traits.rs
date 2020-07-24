@@ -10,7 +10,7 @@ pub trait EntryDb {
         &self,
         conn: &mut PgConnection,
         username: &str,
-    ) -> Result<Option<(CustomerComponent, EmailComponent)>>;
+    ) -> Result<Option<(CustomerComponent, Option<EmailComponent>)>>;
     async fn create_email(&self, conn: &mut PgConnection, email: &str, customer_id: Uuid) -> Result<EmailComponent>;
 }
 

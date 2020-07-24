@@ -14,6 +14,14 @@ pub async fn run() -> Result<()> {
     let url = std::env::var("DATABASE_URL").map_err(|_| "DATABASE_URL is not set in .env file")?;
     let db_pool = DbPoolBuilder::from_url(&url).build().await?;
     let modules = web::Data::new(ServerModules::new().await?);
+    //let mut conn = db_pool.acquire().await?;
+    // let c = modules
+    //     .get_ref()
+    //     .user()
+    //     .entry()
+    //     .get_customer_with_email_by_username(&mut conn, "admin")
+    //     .await?;
+    // println!("{:?}", c);
     let schema = Arc::new(GraphqlRootBuilder.build());
     let app = move || {
         App::new()

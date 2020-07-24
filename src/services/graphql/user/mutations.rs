@@ -4,10 +4,10 @@ use shared::*;
 
 pub struct UserMutations;
 
-#[graphql_object(context = JuniperContext)]
+#[graphql_object(context = JuniperContext, scalar = ServerScalarValue)]
 impl UserMutations {
     /// Register customer
-    async fn register(ctx: &JuniperContext, username: String, email: Option<String>) -> FieldResult<Customer> {
+    async fn register(ctx: &JuniperContext, username: String, email: Option<String>) -> FieldResult<Customer, ServerScalarValue> {
         let mut conn = ctx.db_pool().acquire().await?;
         let customer = ctx
             .modules()

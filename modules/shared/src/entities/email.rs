@@ -3,11 +3,12 @@ use crate::scalars::*;
 use juniper::*;
 
 #[derive(Clone, Debug, GraphQLObject)]
+#[graphql(scalar = ServerScalarValue)]
 pub struct Email {
     pub id: Uuid,
     pub customer_id: Uuid,
     pub email: String,
-    pub created_at: UnixTime,
+    pub created_at: NaiveDateTime,
 }
 
 impl From<EmailComponent> for Email {
@@ -16,7 +17,7 @@ impl From<EmailComponent> for Email {
             id: email.id,
             customer_id: email.customer_id,
             email: email.email,
-            created_at: email.created_at.into(),
+            created_at: email.created_at,
         }
     }
 }

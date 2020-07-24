@@ -4,7 +4,7 @@ use super::{
 };
 use actix_web::{get, post, web, Error, HttpResponse, Responder};
 use juniper::http::{playground::playground_source, GraphQLRequest};
-use shared::DbPool;
+use shared::{DbPool, ServerScalarValue};
 use std::sync::Arc;
 
 #[get("/playground")]
@@ -16,7 +16,7 @@ pub async fn playground_handler() -> impl Responder {
 #[post("/graphql")]
 pub async fn graphql_handler(
     graphql_root: web::Data<Arc<GraphqlRoot>>,
-    req: web::Json<GraphQLRequest>,
+    req: web::Json<GraphQLRequest<ServerScalarValue>>,
     db_pool: web::Data<DbPool>,
     modules: web::Data<ServerModules>,
 ) -> Result<impl Responder, Error> {
