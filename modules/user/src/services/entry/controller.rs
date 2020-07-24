@@ -24,11 +24,11 @@ impl EntryDb for EntryController {
             VALUES($1, $2, $3, $4, $5)
         "#,
         )
-        .bind(component.id)
-        .bind(component.username.clone())
-        .bind(component.customer_type as i16)
-        .bind(serde_json::to_value(&component.preferences)?)
-        .bind(component.created_at)
+        .bind(&component.id)
+        .bind(&component.username)
+        .bind(&component.customer_type)
+        .bind(&component.preferences)
+        .bind(&component.created_at)
         .execute(conn)
         .await?;
         Ok(component)
@@ -118,10 +118,10 @@ impl EntryDb for EntryController {
             VALUES($1, $2, $3, $4)
         "#,
         )
-        .bind(component.id)
-        .bind(component.customer_id)
-        .bind(component.email.clone())
-        .bind(component.created_at)
+        .bind(&component.id)
+        .bind(&component.customer_id)
+        .bind(&component.email)
+        .bind(&component.created_at)
         .execute(conn)
         .await?;
         Ok(component)
