@@ -130,8 +130,85 @@ impl<'de> de::Visitor<'de> for ServerScalarValueVisitor {
     }
 }
 
-// #[derive(Clone, Debug, From)]
-// pub struct UnixTime(pub NaiveDateTime);
+#[juniper::graphql_scalar(name = "Long")]
+impl GraphQLScalar for i64 {
+    // Define how to convert your custom scalar into a primitive type.
+    fn resolve(&self) -> Value<ServerScalarValue> {
+        Value::scalar(*self)
+    }
+
+    // Define how to parse a primitive type into your custom scalar.
+    fn from_input_value(v: &InputValue<ServerScalarValue>) -> Option<i64> {
+        v.as_scalar_value()
+            .and_then(|v: &ServerScalarValue| v.as_str())
+            .and_then(|s| s.parse().ok())
+    }
+
+    // Define how to parse a string value.
+    fn from_str<'a>(value: ScalarToken<'a, ServerScalarValue>) -> ParseScalarResult<'a, ServerScalarValue> {
+        <String as ParseScalarValue<ServerScalarValue>>::from_str(value)
+    }
+}
+
+#[juniper::graphql_scalar(name = "UnsignedInt")]
+impl GraphQLScalar for u32 {
+    // Define how to convert your custom scalar into a primitive type.
+    fn resolve(&self) -> Value<ServerScalarValue> {
+        Value::scalar(*self)
+    }
+
+    // Define how to parse a primitive type into your custom scalar.
+    fn from_input_value(v: &InputValue<ServerScalarValue>) -> Option<u32> {
+        v.as_scalar_value()
+            .and_then(|v: &ServerScalarValue| v.as_str())
+            .and_then(|s| s.parse().ok())
+    }
+
+    // Define how to parse a string value.
+    fn from_str<'a>(value: ScalarToken<'a, ServerScalarValue>) -> ParseScalarResult<'a, ServerScalarValue> {
+        <String as ParseScalarValue<ServerScalarValue>>::from_str(value)
+    }
+}
+
+#[juniper::graphql_scalar(name = "UnsignedLong")]
+impl GraphQLScalar for u64 {
+    // Define how to convert your custom scalar into a primitive type.
+    fn resolve(&self) -> Value<ServerScalarValue> {
+        Value::scalar(*self)
+    }
+
+    // Define how to parse a primitive type into your custom scalar.
+    fn from_input_value(v: &InputValue<ServerScalarValue>) -> Option<u64> {
+        v.as_scalar_value()
+            .and_then(|v: &ServerScalarValue| v.as_str())
+            .and_then(|s| s.parse().ok())
+    }
+
+    // Define how to parse a string value.
+    fn from_str<'a>(value: ScalarToken<'a, ServerScalarValue>) -> ParseScalarResult<'a, ServerScalarValue> {
+        <String as ParseScalarValue<ServerScalarValue>>::from_str(value)
+    }
+}
+
+#[juniper::graphql_scalar(name = "Float")]
+impl GraphQLScalar for f32 {
+    // Define how to convert your custom scalar into a primitive type.
+    fn resolve(&self) -> Value<ServerScalarValue> {
+        Value::scalar(*self)
+    }
+
+    // Define how to parse a primitive type into your custom scalar.
+    fn from_input_value(v: &InputValue<ServerScalarValue>) -> Option<f32> {
+        v.as_scalar_value()
+            .and_then(|v: &ServerScalarValue| v.as_str())
+            .and_then(|s| s.parse().ok())
+    }
+
+    // Define how to parse a string value.
+    fn from_str<'a>(value: ScalarToken<'a, ServerScalarValue>) -> ParseScalarResult<'a, ServerScalarValue> {
+        <String as ParseScalarValue<ServerScalarValue>>::from_str(value)
+    }
+}
 
 #[juniper::graphql_scalar]
 impl GraphQLScalar for NaiveDateTime {
