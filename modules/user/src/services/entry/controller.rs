@@ -7,12 +7,12 @@ pub struct EntryController;
 
 #[async_trait]
 impl EntryDb for EntryController {
-    async fn create_customer(&self, conn: &mut PgConnection, username: &str) -> Result<CustomerComponent> {
-        let component = CustomerComponent {
+    async fn create_customer(&self, conn: &mut PgConnection, username: &str) -> Result<CustomerComp> {
+        let component = CustomerComp {
             id: new_uuid(),
             username: username.to_owned(),
-            customer_type: CustomerTypeComponent::User,
-            preferences: Json(PreferencesComponent {
+            customer_type: CustomerTypeComp::User,
+            preferences: Json(PreferencesComp {
                 online: true,
                 sounds: true,
             }),
@@ -34,7 +34,7 @@ impl EntryDb for EntryController {
         Ok(component)
     }
 
-    async fn get_customer_by_username(&self, conn: &mut PgConnection, username: &str) -> Result<Option<CustomerComponent>> {
+    async fn get_customer_by_username(&self, conn: &mut PgConnection, username: &str) -> Result<Option<CustomerComp>> {
         let component = sqlx::query_as(
             r#"
             SELECT
@@ -49,7 +49,7 @@ impl EntryDb for EntryController {
         Ok(component)
     }
 
-    async fn get_customer_by_email(&self, conn: &mut PgConnection, email: &str) -> Result<Option<CustomerComponent>> {
+    async fn get_customer_by_email(&self, conn: &mut PgConnection, email: &str) -> Result<Option<CustomerComp>> {
         let component = sqlx::query_as(
             r#"
             SELECT
@@ -69,7 +69,7 @@ impl EntryDb for EntryController {
         &self,
         conn: &mut PgConnection,
         username: &str,
-    ) -> Result<Option<(CustomerComponent, Option<EmailComponent>)>> {
+    ) -> Result<Option<(CustomerComp, Option<EmailComp>)>> {
         let components = sqlx::query(
             r#"
             SELECT
@@ -82,7 +82,7 @@ impl EntryDb for EntryController {
         )
         .bind(username)
         .try_map(|row: sqlx::postgres::PgRow| {
-            let user = CustomerComponent {
+            let user = CustomerComp {
                 id: row.try_get(0)?,
                 username: row.try_get(1)?,
                 customer_type: row.try_get(2)?,
@@ -90,7 +90,7 @@ impl EntryDb for EntryController {
                 created_at: row.try_get(4)?,
             };
             let email = match row.try_get::<Option<Uuid>, _>(5)?.is_some() {
-                true => Some(EmailComponent {
+                true => Some(EmailComp {
                     id: row.try_get(5)?,
                     customer_id: row.try_get(6)?,
                     email: row.try_get(7)?,
@@ -105,8 +105,8 @@ impl EntryDb for EntryController {
         Ok(components)
     }
 
-    async fn create_email(&self, conn: &mut PgConnection, email: &str, customer_id: Uuid) -> Result<EmailComponent> {
-        let component = EmailComponent {
+    async fn create_email(&self, conn: &mut PgConnection, email: &str, customer_id: Uuid) -> Result<EmailComp> {
+        let component = EmailComp {
             id: new_uuid(),
             customer_id,
             email: email.to_owned(),

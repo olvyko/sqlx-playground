@@ -11,8 +11,8 @@ pub struct Email {
     pub created_at: NaiveDateTime,
 }
 
-impl From<EmailComponent> for Email {
-    fn from(email: EmailComponent) -> Email {
+impl From<EmailComp> for Email {
+    fn from(email: EmailComp) -> Email {
         Email {
             id: email.id,
             customer_id: email.customer_id,

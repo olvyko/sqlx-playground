@@ -26,17 +26,17 @@ pub struct Preferences {
     pub sounds: bool,
 }
 
-impl From<CustomerTypeComponent> for CustomerType {
-    fn from(customer_type: CustomerTypeComponent) -> CustomerType {
+impl From<CustomerTypeComp> for CustomerType {
+    fn from(customer_type: CustomerTypeComp) -> CustomerType {
         match customer_type {
-            CustomerTypeComponent::Admin => CustomerType::Admin,
-            CustomerTypeComponent::User => CustomerType::User,
+            CustomerTypeComp::Admin => CustomerType::Admin,
+            CustomerTypeComp::User => CustomerType::User,
         }
     }
 }
 
-impl From<PreferencesComponent> for Preferences {
-    fn from(preferences: PreferencesComponent) -> Preferences {
+impl From<PreferencesComp> for Preferences {
+    fn from(preferences: PreferencesComp) -> Preferences {
         Preferences {
             online: preferences.online,
             sounds: preferences.sounds,
@@ -44,8 +44,8 @@ impl From<PreferencesComponent> for Preferences {
     }
 }
 
-impl From<(CustomerComponent, Option<EmailComponent>)> for Customer {
-    fn from((customer, email): (CustomerComponent, Option<EmailComponent>)) -> Customer {
+impl From<(CustomerComp, Option<EmailComp>)> for Customer {
+    fn from((customer, email): (CustomerComp, Option<EmailComp>)) -> Customer {
         Customer {
             id: customer.id,
             username: customer.username,

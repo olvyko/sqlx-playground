@@ -3,15 +3,15 @@ use shared::*;
 
 #[async_trait]
 pub trait EntryDb {
-    async fn create_customer(&self, conn: &mut PgConnection, username: &str) -> Result<CustomerComponent>;
-    async fn get_customer_by_username(&self, conn: &mut PgConnection, username: &str) -> Result<Option<CustomerComponent>>;
-    async fn get_customer_by_email(&self, conn: &mut PgConnection, email: &str) -> Result<Option<CustomerComponent>>;
+    async fn create_customer(&self, conn: &mut PgConnection, username: &str) -> Result<CustomerComp>;
+    async fn get_customer_by_username(&self, conn: &mut PgConnection, username: &str) -> Result<Option<CustomerComp>>;
+    async fn get_customer_by_email(&self, conn: &mut PgConnection, email: &str) -> Result<Option<CustomerComp>>;
     async fn get_customer_with_email_by_username(
         &self,
         conn: &mut PgConnection,
         username: &str,
-    ) -> Result<Option<(CustomerComponent, Option<EmailComponent>)>>;
-    async fn create_email(&self, conn: &mut PgConnection, email: &str, customer_id: Uuid) -> Result<EmailComponent>;
+    ) -> Result<Option<(CustomerComp, Option<EmailComp>)>>;
+    async fn create_email(&self, conn: &mut PgConnection, email: &str, customer_id: Uuid) -> Result<EmailComp>;
 }
 
 pub trait EntryMailer {
