@@ -1,4 +1,4 @@
-use super::*;
+use crate::scalars::*;
 
 #[derive(Clone, Debug)]
 pub struct EmailComponent {

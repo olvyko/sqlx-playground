@@ -1,4 +1,5 @@
-use super::*;
+use crate::scalars::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct CustomerComponent {
