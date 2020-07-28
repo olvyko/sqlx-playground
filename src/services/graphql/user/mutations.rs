@@ -7,7 +7,7 @@ pub struct UserMutations;
 #[graphql_object(context = JuniperContext, scalar = ServerScalarValue)]
 impl UserMutations {
     /// Register customer
-    async fn register(ctx: &JuniperContext, username: String, email: Option<String>) -> FieldResult<Customer, ServerScalarValue> {
+    async fn register(ctx: &JuniperContext, username: String, email: Option<String>) -> FieldResult<CustomerEntity, ServerScalarValue> {
         let mut conn = ctx.db_pool().acquire().await?;
         let customer = ctx
             .modules()

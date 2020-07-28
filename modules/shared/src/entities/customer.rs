@@ -5,48 +5,48 @@ use juniper::*;
 
 #[derive(Debug, GraphQLObject)]
 #[graphql(scalar = ServerScalarValue)]
-pub struct Customer {
+pub struct CustomerEntity {
     pub id: Uuid,
     pub username: String,
-    pub customer_type: CustomerType,
-    pub preferences: Preferences,
+    pub customer_type: CustomerTypeEntity,
+    pub preferences: PreferencesEntity,
     pub created_at: NaiveDateTime,
-    pub email: Option<Email>,
+    pub email: Option<EmailEntity>,
 }
 
 #[derive(Debug, Clone, Copy, GraphQLEnum)]
-pub enum CustomerType {
+pub enum CustomerTypeEntity {
     Admin = 1,
-    User = 2,
+    Player = 2,
 }
 
 #[derive(Debug, GraphQLObject)]
-pub struct Preferences {
+pub struct PreferencesEntity {
     pub online: bool,
     pub sounds: bool,
 }
 
-impl From<CustomerTypeComp> for CustomerType {
-    fn from(customer_type: CustomerTypeComp) -> CustomerType {
+impl From<CustomerType> for CustomerTypeEntity {
+    fn from(customer_type: CustomerType) -> CustomerTypeEntity {
         match customer_type {
-            CustomerTypeComp::Admin => CustomerType::Admin,
-            CustomerTypeComp::User => CustomerType::User,
+            CustomerType::Admin => CustomerTypeEntity::Admin,
+            CustomerType::Player => CustomerTypeEntity::Player,
         }
     }
 }
 
-impl From<PreferencesComp> for Preferences {
-    fn from(preferences: PreferencesComp) -> Preferences {
-        Preferences {
+impl From<Preferences> for PreferencesEntity {
+    fn from(preferences: Preferences) -> PreferencesEntity {
+        PreferencesEntity {
             online: preferences.online,
             sounds: preferences.sounds,
         }
     }
 }
 
-impl From<(CustomerComp, Option<EmailComp>)> for Customer {
-    fn from((customer, email): (CustomerComp, Option<EmailComp>)) -> Customer {
-        Customer {
+impl From<(Customer, Option<Email>)> for CustomerEntity {
+    fn from((customer, email): (Customer, Option<Email>)) -> CustomerEntity {
+        CustomerEntity {
             id: customer.id,
             username: customer.username,
             customer_type: customer.customer_type.into(),

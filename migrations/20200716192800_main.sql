@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS customer (
     username TEXT UNIQUE NOT NULL,
     customer_type SMALLINT NOT NULL,
     preferences JSONB NOT NULL,
+    data JSONB NOT NULL,
     created_at TIMESTAMP(3) NOT NULL
 );
 

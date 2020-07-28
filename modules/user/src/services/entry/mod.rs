@@ -1,7 +1,7 @@
 mod controller;
-mod traits;
+mod gateways;
 mod usecase;
 
 pub use controller::*;
-pub use traits::*;
+pub use gateways::*;
 pub use usecase::*;

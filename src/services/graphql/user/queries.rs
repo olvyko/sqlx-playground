@@ -7,7 +7,7 @@ pub struct UserQueries;
 #[graphql_object(context = JuniperContext, scalar = ServerScalarValue)]
 impl UserQueries {
     /// Return customer
-    async fn get_customer_by_username(ctx: &JuniperContext, username: String) -> FieldResult<Option<Customer>, ServerScalarValue> {
+    async fn get_customer_by_username(ctx: &JuniperContext, username: String) -> FieldResult<Option<CustomerEntity>, ServerScalarValue> {
         let mut conn = ctx.db_pool().acquire().await?;
         let customer = ctx.modules().user().entry().get_customer_by_username(&mut conn, &username).await?;
         Ok(customer)

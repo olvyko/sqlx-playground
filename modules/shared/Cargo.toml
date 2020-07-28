@@ -21,7 +21,6 @@ default-features = false
 features = ["url", "uuid"]
 
 [dependencies.sqlx]
-git = "https://github.com/launchbadge/sqlx"
-rev = "41261862d3537bd386149b4bf40d3a9517f73205"
+version = "0.4.0-beta.1"
 features = [ "offline", "macros", "runtime-actix", "postgres", "migrate", "json", "chrono", "uuid" ]
 default-features = false

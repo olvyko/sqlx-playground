@@ -1,10 +1,7 @@
 use crate::scalars::*;
 pub use sqlx;
+use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions, PgSslMode};
 pub use sqlx::PgConnection;
-use sqlx::{
-    migrate::Migrator,
-    postgres::{PgConnectOptions, PgPool, PgPoolOptions, PgSslMode},
-};
 
 pub type DbPool = PgPool;
 
@@ -46,9 +43,7 @@ impl DbPoolFromOptions {
             .connect_timeout(std::time::Duration::from_secs(1))
             .connect_with(self.options)
             .await?;
-        // Now its works only in runtime but soon `migrate!` macro will be avaliable
-        let migrator = Migrator::new(std::path::Path::new("./migrations")).await?;
-        migrator.run(&pool).await?;
+        sqlx::migrate!("../../migrations").run(&pool).await?;
         Ok(pool)
     }
 }
@@ -59,9 +54,7 @@ impl<'a> DbPoolFromUrl<'a> {
             .connect_timeout(std::time::Duration::from_secs(1))
             .connect(self.url)
             .await?;
-        // Now its works only in runtime but soon `migrate!` macro will be avaliable
-        let migrator = Migrator::new(std::path::Path::new("./migrations")).await?;
-        migrator.run(&pool).await?;
+        sqlx::migrate!("../../migrations").run(&pool).await?;
         Ok(pool)
     }
 }
