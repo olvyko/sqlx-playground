@@ -1,4 +1,4 @@
-use super::gateways::*;
+use super::gateway::*;
 use async_trait::async_trait;
 use shared::*;
 use sqlx::Row;
